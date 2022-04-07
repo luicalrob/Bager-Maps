@@ -9,13 +9,14 @@ datos = pd.read_csv('Sample test file - Sheet1.csv',header = 0)
 #datos = datos.dropna(how='all')
 print(datos)
 
-## Nombres ordenados alfabeticamente ## 
+## Nombres ordenados alfabeticamente (ordenando los nombres, no los apellidos)## 
 datos_nombres_ordenados = datos.sort_values(by='First Name')
 datos_nombres_ordenados = datos_nombres_ordenados[['First Name','Last Name']]
+datos_nombres_ordenados = datos_nombres_ordenados.astype({'First Name':'string','Last Name':'string'})  # Convertir a String
 
-## Funcion
+## Funciones
 
-def normalize(s):
+def normalize(s):   # función elimina tildes
     replacements = (
         ("Á", "A"),
         ("É", "E"),
@@ -32,14 +33,20 @@ def normalize(s):
         s = s.replace(a, b).replace(a.upper(), b.upper())
     return s
 
-def isNaN(num):
+def isNaN(num):     # funcion comprueba NaN
     return num != num
 
-
+salida = ["" for x in range(len(datos))]    # variable de salida de Full Names
+i=0;        # variable auxiliar para guardar donde hay nombres vacios
 
 for j in range(len(datos)):
     if isNaN(datos['First Name'][j]):
-        raise TypeError("El nombre está vacío.")
+        print("Error: El nombre está vacío en la posicion ", j,".")       
     else:          
-        datos['First Name'][j]=normalize(datos['First Name'][j])  
-        print(datos['First Name'][j])
+        datos_nombres_ordenados['First Name'][j]=normalize(datos_nombres_ordenados['First Name'][j])
+        salida[i] = datos_nombres_ordenados['First Name'][j]
+        salida[i] += " "
+        salida[i] += datos_nombres_ordenados['Last Name'][j]
+        i+=1;
+
+print(salida)
