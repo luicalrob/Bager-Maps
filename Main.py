@@ -10,7 +10,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 ## Lectura de datos 
 datos = pd.read_csv('Sample test file - Sheet1.csv',header = 0)
 #datos = datos.dropna(how='all')
-print(datos)
+#print(datos)
 
 
 
@@ -22,7 +22,6 @@ datos_nombres_string = datos_nombres_df.astype({'First Name':'string','Last Name
 
 datos_fechas_df = datos[['Last Check-In Date']]
 datos_fechas_date = pd.to_datetime(datos_fechas_df['Last Check-In Date'])
-
 
 
 
@@ -50,9 +49,13 @@ def isNaN(num):     # funcion comprueba NaN
 
 
 
+
+
 ## obtencion de resultados
 
+
 # obtenemos los full names
+
 # for para detectar los vacios y para quitar las tildes de los nombres
 
 for j in range(len(datos)):
@@ -62,6 +65,7 @@ for j in range(len(datos)):
         datos_nombres_df['First Name'][j]=normalize(datos_nombres_df['First Name'][j])
         
 # ordenamos los nombres
+
 datos_nombres_ordenados = datos_nombres_df.sort_values(by='First Name')
 
 salida = ["" for x in range(len(datos))]    # variable de salida de Full Names
@@ -77,16 +81,22 @@ print("\n")
 print(salida)
 
 
+
+
 # obtenemos los clientes por fechas
 
+
 # for para detectar los vacios
+
 i=0     # variables auxiliar para saber cuantas fechas erroneas hay
 for j in range(len(datos)):
     if isNaN(datos_fechas_df['Last Check-In Date'][j]):
         print("\nError: La fecha está vacía en la posición ", j,".")
         i+=1
-       
+   
+        
 # ordenamos las fechas
+
 datos_fechas_ordenados = datos_fechas_date.sort_values()    
 datos_fechas_ordenados_df = pd.DataFrame({'Last Check-In Date': pd.to_datetime(datos_fechas_ordenados)})
 print("\n")
@@ -97,20 +107,35 @@ cliente_antiguo=""
 cliente_reciente=""
 j=0     # variables auxiliar para encontrar la fecha mas reciente y la mas antigua
 
+
+
 # guardo el nombre mas antiguo y el mas reciente
+
 for index, row in datos_fechas_ordenados_df.iterrows():
     if j==0:    # mas antiguo    
-        cliente_antiguo=datos_nombres_string['First Name'][index]
+        cliente_antiguo=datos['First Name'][index]
         cliente_antiguo+=" "
-        cliente_antiguo+=datos_nombres_string['Last Name'][index]    
+        cliente_antiguo+=datos['Last Name'][index]
+        num_antiguo=index
     if j==len(datos)-1-i:
-        cliente_reciente=datos_nombres_string['First Name'][index]
+        cliente_reciente=datos['First Name'][index]
         cliente_reciente+=" "
-        cliente_reciente+=datos_nombres_string['Last Name'][index]
+        cliente_reciente+=datos['Last Name'][index]
+        num_reciente=index
     j+=1
 
-print("\n")
 print("\nEl customer con el check-in date más antiguo es", cliente_antiguo,".")
-print("\n")
 print("\nEl customer con el check-in date más antiguo es", cliente_reciente,".")
+
+
+# dar required files de los clientes obtenidos
+
+
+datos_cliente_antiguo_df = pd.DataFrame({'Name':cliente_antiguo, 'Street':(datos['Street'][num_antiguo]), 'Zip':(datos['Zip'][num_antiguo]), 'City':(datos['City'][num_antiguo]), 'Last Check-In Date':(datos['Last Check-In Date'][num_antiguo]), 'Company':(datos['Company'][num_antiguo])},index=[0])
+datos_cliente_reciente_df = pd.DataFrame({'Name':cliente_reciente, 'Street':(datos['Street'][num_reciente]), 'Zip':(datos['Zip'][num_reciente]), 'City':(datos['City'][num_reciente]), 'Last Check-In Date':(datos['Last Check-In Date'][num_reciente]), 'Company':(datos['Company'][num_reciente])},index=[0])
+
+print("\n")
+print(datos_cliente_antiguo_df)
+print("\n")
+print(datos_cliente_reciente_df)
 
