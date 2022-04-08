@@ -128,14 +128,48 @@ print("\nEl customer con el check-in date más antiguo es", cliente_antiguo,".")
 print("\nEl customer con el check-in date más antiguo es", cliente_reciente,".")
 
 
+
+
 # dar required files de los clientes obtenidos
 
-
+# cada uno en un dataframe separado
 datos_cliente_antiguo_df = pd.DataFrame({'Name':cliente_antiguo, 'Street':(datos['Street'][num_antiguo]), 'Zip':(datos['Zip'][num_antiguo]), 'City':(datos['City'][num_antiguo]), 'Last Check-In Date':(datos['Last Check-In Date'][num_antiguo]), 'Company':(datos['Company'][num_antiguo])},index=[0])
 datos_cliente_reciente_df = pd.DataFrame({'Name':cliente_reciente, 'Street':(datos['Street'][num_reciente]), 'Zip':(datos['Zip'][num_reciente]), 'City':(datos['City'][num_reciente]), 'Last Check-In Date':(datos['Last Check-In Date'][num_reciente]), 'Company':(datos['Company'][num_reciente])},index=[0])
 
-print("\n")
-print(datos_cliente_antiguo_df)
-print("\n")
-print(datos_cliente_reciente_df)
+# los dos en un dataframe unido
+#datos_clientes_df = pd.DataFrame({'Name':cliente_antiguo, 'Street':(datos['Street'][num_antiguo]), 'Zip':(datos['Zip'][num_antiguo]), 'City':(datos['City'][num_antiguo]), 'Last Check-In Date':(datos['Last Check-In Date'][num_antiguo]), 'Company':(datos['Company'][num_antiguo])},index=[0])
+#datos_clientes_df = pd.DataFrame({'Name':[cliente_antiguo,cliente_reciente], 'Street':(datos['Street'][num_reciente]), 'Zip':(datos['Zip'][num_reciente]), 'City':(datos['City'][num_reciente]), 'Last Check-In Date':(datos['Last Check-In Date'][num_reciente]), 'Company':(datos['Company'][num_reciente])},index=[1])
+datos_clientes_df = pd.DataFrame({'Name':[cliente_antiguo,cliente_reciente] ,'Street':[datos['Street'][num_antiguo],datos['Street'][num_reciente]] , 'Zip':[(datos['Zip'][num_antiguo]), (datos['Zip'][num_reciente])] , 'City':[(datos['City'][num_antiguo]), (datos['City'][num_reciente])], 'Last Check-In Date':[(datos['Last Check-In Date'][num_antiguo]), (datos['Last Check-In Date'][num_reciente])], 'Company':[(datos['Company'][num_antiguo]), (datos['Company'][num_reciente])]}, index=[0, 1])
 
+# comprobar datos de cada cliente
+
+for index, row in datos_clientes_df.iterrows():
+    if isNaN(row['Street']):
+        if index==0:
+            print("\nError: La dirección del cliente más antiguo está vacía.")
+        else:
+            print("\nError: La dirección del cliente más reciente está vacía.")
+    if isNaN(row['Zip']):
+        if index==0:
+            print("\nError: El Zip del cliente más antiguo está vacío.")
+        else:
+            print("\nError: El Zip del cliente más reciente está vacío.")
+    if isNaN(row['City']):
+        if index==0:
+            print("\nError: La ciudad del cliente más antiguo está vacía.")
+        else:
+            print("\nError: La ciudad del cliente más reciente está vacía.")
+    if isNaN(row['Last Check-In Date']):
+        if index==0:
+            print("\nError: El último Check-in date del cliente más antiguo está vacío.")
+        else:
+            print("\nError: El último Check-in date del cliente más reciente está vacío.")
+    if isNaN(row['Company']):
+        if index==0:
+            print("\nError: La compañia del cliente más antiguo está vacía.")
+        else:
+            print("\nError: La compañia del cliente más reciente está vacía.")
+  
+
+print("\n")
+print(datos_clientes_df)
