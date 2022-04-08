@@ -78,6 +78,7 @@ print(salida)
 
 
 # obtenemos los clientes por fechas
+
 # for para detectar los vacios
 i=0     # variables auxiliar para saber cuantas fechas erroneas hay
 for j in range(len(datos)):
@@ -86,7 +87,30 @@ for j in range(len(datos)):
         i+=1
        
 # ordenamos las fechas
-datos_fechas_ordenados = datos_fechas_date.sort_values()
+datos_fechas_ordenados = datos_fechas_date.sort_values()    
+datos_fechas_ordenados_df = pd.DataFrame({'Last Check-In Date': pd.to_datetime(datos_fechas_ordenados)})
 print("\n")
-print(datos_fechas_ordenados)
+print(datos_fechas_ordenados_df)
+print("\n")
+
+cliente_antiguo=""
+cliente_reciente=""
+j=0     # variables auxiliar para encontrar la fecha mas reciente y la mas antigua
+
+# guardo el nombre mas antiguo y el mas reciente
+for index, row in datos_fechas_ordenados_df.iterrows():
+    if j==0:    # mas antiguo    
+        cliente_antiguo=datos_nombres_string['First Name'][index]
+        cliente_antiguo+=" "
+        cliente_antiguo+=datos_nombres_string['Last Name'][index]    
+    if j==len(datos)-1-i:
+        cliente_reciente=datos_nombres_string['First Name'][index]
+        cliente_reciente+=" "
+        cliente_reciente+=datos_nombres_string['Last Name'][index]
+    j+=1
+
+print("\n")
+print("\nEl customer con el check-in date más antiguo es", cliente_antiguo,".")
+print("\n")
+print("\nEl customer con el check-in date más antiguo es", cliente_reciente,".")
 
